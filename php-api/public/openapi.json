@@ -7,30 +7,140 @@
     },
     "paths": {
         "/": {
-            "get": {
-                "tags": [
-                    "Health"
-                ],
-                "summary": "Versao da aplicacao",
-                "operationId": "981e459ac427097b9e94ae7a8882cf32",
-                "responses": {
-                    "200": {
-                        "description": "Versao retornada com sucesso"
-                    }
-                }
-            },
             "servers": [
                 {
                     "url": "http://localhost:8080",
                     "description": "Ambiente local"
                 }
             ]
+        },
+        "/microsoft_authenticator/register_user": {
+            "get": {
+                "tags": [
+                    "Microsoft Authenticator"
+                ],
+                "parameters": [
+                    {
+                        "name": "client_name",
+                        "in": "query",
+                        "description": "Nome do Cliente",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email do usuário para o qual a versão está sendo solicitada",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Versao da aplicacao",
+                "operationId": "816bea21ab3bf869c6afafdc3abeb1f3",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            }
+        },
+        "/microsoft_authenticator/request_key": {
+            "get": {
+                "tags": [
+                    "Microsoft Authenticator"
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "ID do usuário para o qual a versão está sendo solicitada",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Versao da aplicacao",
+                "operationId": "1ef5ba65c1a5ed94a17a7f13cf68b1e3",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            }
+        },
+        "/google_authenticator/register_user": {
+            "get": {
+                "tags": [
+                    "Google Authenticator"
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "ID do usuário para o qual a versão está sendo solicitada",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_name",
+                        "in": "query",
+                        "description": "Nome do Cliente",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Versao da aplicacao",
+                "operationId": "5b6b5edc81a91e598e3d2baab5b26efc",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            }
+        },
+        "/google_authenticator/request_key": {
+            "get": {
+                "tags": [
+                    "Google Authenticator"
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "ID do usuário para o qual a versão está sendo solicitada",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Versao da aplicacao",
+                "operationId": "231f0d15162d6576d50fafd5672524f0",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
-            "name": "Health",
-            "description": "Health"
+            "name": "Microsoft Authenticator",
+            "description": "Microsoft Authenticator"
+        },
+        {
+            "name": "Google Authenticator",
+            "description": "Google Authenticator"
         }
     ]
 }

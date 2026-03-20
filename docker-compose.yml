@@ -1,0 +1,13 @@
+services:
+  authflow-2fa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: authflow-2fa
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php-api:/var/www/html
+    environment:
+      APP_ENV: local
+    restart: unless-stopped

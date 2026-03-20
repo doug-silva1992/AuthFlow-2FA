@@ -1,4 +1,6 @@
 <?php
+    use App\Http\Controllers\microsoftAuthenticatorController;
+    use App\Http\Controllers\googleAuthenticatorController;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -20,19 +22,43 @@ $router->get('/', function () use ($router) {
 $router->get('/openapi.json', function () {
         $specPath = __DIR__.'/../public/openapi.json';
 
-        if (!file_exists($specPath)) {
-                return response()->json([
-                        'message' => 'Arquivo OpenAPI nao encontrado. Gere com: vendor/bin/openapi app -o public/openapi.json',
-                ], 404);
-        }
+        try {
+                // Em desenvolvimento, gera a spec em tempo real para evitar arquivo desatualizado no container.
+                if (env('APP_ENV') !== 'production') {
+                        $openapi = \OpenApi\Generator::scan([base_path('app')]);
+                        $json = $openapi->toJson();
+                        @file_put_contents($specPath, $json);
 
-        return response(file_get_contents($specPath), 200, [
-                'Content-Type' => 'application/json',
-        ]);
+                        return response($json, 200, [
+                                'Content-Type' => 'application/json',
+                                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                                'Pragma' => 'no-cache',
+                                'Expires' => '0',
+                        ]);
+                }
+
+                if (!file_exists($specPath)) {
+                        return response()->json([
+                                'message' => 'Arquivo OpenAPI nao encontrado. Gere com: vendor/bin/openapi app -o public/openapi.json',
+                        ], 404);
+                }
+
+                return response(file_get_contents($specPath), 200, [
+                        'Content-Type' => 'application/json',
+                        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
+                ]);
+        } catch (\Throwable $e) {
+                return response()->json([
+                        'message' => 'Erro ao gerar OpenAPI',
+                        'error' => $e->getMessage(),
+                ], 500);
+        }
 });
 
 $router->get('/swagger', function () {
-        $swaggerUrl = url('/openapi.json');
+        $swaggerUrl = url('/openapi.json?v='.time());
 
         return response(<<<HTML
 <!doctype html>
@@ -55,5 +81,21 @@ $router->get('/swagger', function () {
 </body>
 </html>
 HTML
-        , 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+        , 200, [
+                'Content-Type' => 'text/html; charset=UTF-8',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+        ]);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+*/
+
+$router->get('/microsoft_authenticator/register_user', 'microsoftAuthenticatorController@registerUser');
+$router->get('/microsoft_authenticator/request_key', 'microsoftAuthenticatorController@requestKey');
+$router->get('/google_authenticator/register_user', 'googleAuthenticatorController@registerUser');
+$router->get('/google_authenticator/request_key', 'googleAuthenticatorController@requestKey');
