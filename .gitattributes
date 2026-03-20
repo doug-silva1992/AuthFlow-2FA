@@ -1,0 +1,14 @@
+* text=auto
+
+# Keep source and data files normalized with LF in repo
+*.php text eol=lf
+*.json text eol=lf
+*.lock text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Windows scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf

@@ -53,15 +53,6 @@ final class OpenApiSpec
         path: '/microsoft_authenticator/request_key',
         summary: 'Endpoint Microsoft Authenticator',
         tags: ['Microsoft Authenticator'],
-        parameters: [
-            new OA\Parameter(
-                name: 'user_id',
-                in: 'query',
-                description: 'ID do usuário para o qual a versão está sendo solicitada',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            )
-        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -108,15 +99,6 @@ final class OpenApiSpec
         path: '/google_authenticator/request_key',
         summary: 'Endpoint Google Authenticator',
         tags: ['Google Authenticator'],
-        parameters: [
-            new OA\Parameter(
-                name: 'user_id',
-                in: 'query',
-                description: 'ID do usuário para o qual a versão está sendo solicitada',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            )
-        ],
         responses: [
             new OA\Response(
                 response: 200,

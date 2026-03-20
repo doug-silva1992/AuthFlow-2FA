@@ -53,22 +53,39 @@
                 "tags": [
                     "Microsoft Authenticator"
                 ],
+                "summary": "Versao da aplicacao",
+                "operationId": "1ef5ba65c1a5ed94a17a7f13cf68b1e3",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            }
+        },
+        "/microsoft_authenticator/verify_code": {
+            "get": {
+                "tags": [
+                    "Microsoft Authenticator"
+                ],
                 "parameters": [
                     {
-                        "name": "user_id",
+                        "name": "code",
                         "in": "query",
-                        "description": "ID do usuário para o qual a versão está sendo solicitada",
+                        "description": "Código TOTP a ser verificado",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     }
                 ],
-                "summary": "Versao da aplicacao",
-                "operationId": "1ef5ba65c1a5ed94a17a7f13cf68b1e3",
+                "summary": "Verifica o código TOTP",
+                "operationId": "verifyMicrosoftAuthenticatorCode",
                 "responses": {
                     "200": {
-                        "description": "Versao retornada com sucesso"
+                        "description": "Código verificado com sucesso"
+                    },
+                    "400": {
+                        "description": "Código inválido ou usuário não registrado"
                     }
                 }
             }
@@ -112,22 +129,39 @@
                 "tags": [
                     "Google Authenticator"
                 ],
+                "summary": "Versao da aplicacao",
+                "operationId": "231f0d15162d6576d50fafd5672524f0",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            }
+        },
+        "/google_authenticator/verify_code": {
+            "get": {
+                "tags": [
+                    "Google Authenticator"
+                ],
                 "parameters": [
                     {
-                        "name": "user_id",
+                        "name": "code",
                         "in": "query",
-                        "description": "ID do usuário para o qual a versão está sendo solicitada",
+                        "description": "Código TOTP a ser verificado",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     }
                 ],
-                "summary": "Versao da aplicacao",
-                "operationId": "231f0d15162d6576d50fafd5672524f0",
+                "summary": "Verifica o código",
+                "operationId": "verifyGoogleAuthenticatorCode",
                 "responses": {
                     "200": {
-                        "description": "Versao retornada com sucesso"
+                        "description": "Código verificado com sucesso"
+                    },
+                    "400": {
+                        "description": "Código inválido ou usuário não registrado"
                     }
                 }
             }
