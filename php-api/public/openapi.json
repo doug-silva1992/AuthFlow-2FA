@@ -1,0 +1,36 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AuthFlow 2FA API",
+        "description": "Documentacao da API AuthFlow 2FA",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Versao da aplicacao",
+                "operationId": "981e459ac427097b9e94ae7a8882cf32",
+                "responses": {
+                    "200": {
+                        "description": "Versao retornada com sucesso"
+                    }
+                }
+            },
+            "servers": [
+                {
+                    "url": "http://localhost:8080",
+                    "description": "Ambiente local"
+                }
+            ]
+        }
+    },
+    "tags": [
+        {
+            "name": "Health",
+            "description": "Health"
+        }
+    ]
+}

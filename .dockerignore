@@ -1,0 +1,13 @@
+# Git and editor
+.git
+.gitignore
+.vscode
+
+# PHP dependencies generated on host
+php-api/vendor
+
+# Runtime/cache files
+php-api/storage/logs
+php-api/storage/framework/cache
+php-api/storage/framework/views
+php-api/bootstrap/cache
