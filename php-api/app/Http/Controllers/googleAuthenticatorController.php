@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use App\Models\usuariosModel;
 
 class microsoftAuthenticatorController extends Controller
 {
@@ -23,8 +24,11 @@ class microsoftAuthenticatorController extends Controller
             ], 400);
         }
 
-        setcookie("email", $request->query('email'), time() + 3600, "/");
-        setcookie("client_name", $request->query('client_name'), time() + 3600, "/");
+        // Lógica para registrar o usuário e gerar a chave TOTP
+        $user = usuariosModel::create([
+            'email' => $request->input('email'),
+            'nome' => $request->input('client_name'),
+        ]);
 
         return response()->json([
             'message' => 'Usuário registrado com sucesso',

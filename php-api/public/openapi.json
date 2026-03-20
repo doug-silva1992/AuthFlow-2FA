@@ -24,7 +24,7 @@
                         "name": "client_name",
                         "in": "query",
                         "description": "Nome do Cliente",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -32,8 +32,26 @@
                     {
                         "name": "email",
                         "in": "query",
-                        "description": "Email do usuário para o qual a versão está sendo solicitada",
+                        "description": "Email do usuário para o qual a versão está sendo cadastrada",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "senha",
+                        "in": "query",
+                        "description": "Senha do usuário para o qual a versão está sendo cadastrada",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fk_IdentityProvider",
+                        "in": "query",
+                        "description": "ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -109,6 +127,24 @@
                         "name": "client_name",
                         "in": "query",
                         "description": "Nome do Cliente",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "senha",
+                        "in": "query",
+                        "description": "Senha do usuário para o qual a versão está sendo solicitada",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fk_IdentityProvider",
+                        "in": "query",
+                        "description": "ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)",
                         "required": false,
                         "schema": {
                             "type": "string"

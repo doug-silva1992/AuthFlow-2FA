@@ -27,7 +27,7 @@ final class OpenApiSpec
                 name: 'client_name',
                 in: 'query',
                 description: 'Nome do Cliente',
-                required: false,
+                required: true,
                 schema: new OA\Schema(type: 'string')
             ),
             new OA\Parameter(
@@ -35,6 +35,20 @@ final class OpenApiSpec
                 in: 'query',
                 description: 'Email do usuário para o qual a versão está sendo solicitada',
                 required: true,
+                schema: new OA\Schema(type: 'string')
+            ),
+            new OA\Parameter(
+                name: 'senha',
+                in: 'query',
+                description: 'Senha do usuário para o qual a versão está sendo solicitada',
+                required: true,
+                schema: new OA\Schema(type: 'string')
+            ),
+            new OA\Parameter(
+                name: 'fk_IdentityProvider',
+                in: 'query',
+                description: 'ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)',
+                required: false,
                 schema: new OA\Schema(type: 'string')
             )
         ],
@@ -65,6 +79,34 @@ final class OpenApiSpec
     }
 
     #[OA\Get(
+        path: '/microsoft_authenticator/verify_code',
+        summary: 'Endpoint Microsoft Authenticator',
+        tags: ['Microsoft Authenticator'],
+        parameters: [
+            new OA\Parameter(
+                name: 'code',
+                in: 'query',
+                description: 'Código TOTP a ser verificado',
+                required: true,
+                schema: new OA\Schema(type: 'string')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Código verificado com sucesso'
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Código inválido ou usuário não registrado'
+            )
+        ]
+    )]
+    public function microsoftAuthenticatorVerifyCode(): void
+    {
+    }
+
+    #[OA\Get(
         path: '/google_authenticator/register_user',
         summary: 'Endpoint Google Authenticator',
         tags: ['Google Authenticator'],
@@ -81,6 +123,20 @@ final class OpenApiSpec
                 in: 'query',
                 description: 'Email do usuário para o qual a versão está sendo solicitada',
                 required: true,
+                schema: new OA\Schema(type: 'string')
+            ),
+            new OA\Parameter(
+                name: 'senha',
+                in: 'query',
+                description: 'Senha do usuário para o qual a versão está sendo solicitada',
+                required: true,
+                schema: new OA\Schema(type: 'string')
+            ),
+             new OA\Parameter(
+                name: 'fk_IdentityProvider',
+                in: 'query',
+                description: 'ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)',
+                required: false,
                 schema: new OA\Schema(type: 'string')
             )
         ],
@@ -107,6 +163,34 @@ final class OpenApiSpec
         ]
     )]
     public function googleAuthenticatorRequestKey(): void
+    {
+    }
+
+    #[OA\Get(
+        path: '/google_authenticator/verify_code',
+        summary: 'Endpoint Google Authenticator',
+        tags: ['Google Authenticator'],
+        parameters: [
+            new OA\Parameter(
+                name: 'code',
+                in: 'query',
+                description: 'Código TOTP a ser verificado',
+                required: true,
+                schema: new OA\Schema(type: 'string')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Código verificado com sucesso'
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Código inválido ou usuário não registrado'
+            )
+        ]
+    )]
+    public function googleAuthenticatorVerifyCode(): void
     {
     }
 }
