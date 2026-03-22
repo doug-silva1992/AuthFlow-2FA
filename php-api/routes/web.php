@@ -1,6 +1,7 @@
 <?php
-    use App\Http\Controllers\microsoftAuthenticatorController;
-    use App\Http\Controllers\googleAuthenticatorController;
+    use App\Http\Controllers\MicrosoftAuthenticatorController;
+    use App\Http\Controllers\GoogleAuthenticatorController;
+    use App\Http\Controllers\UserController;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -95,7 +96,6 @@ HTML
 |--------------------------------------------------------------------------
 */
 
-$router->get('/microsoft_authenticator/register_user', 'microsoftAuthenticatorController@registerUser');
-$router->get('/microsoft_authenticator/request_key', 'microsoftAuthenticatorController@requestKey');
-$router->get('/google_authenticator/register_user', 'googleAuthenticatorController@registerUser');
-$router->get('/google_authenticator/request_key', 'googleAuthenticatorController@requestKey');
+$router->post('/users/register', 'UserController@registerUser');
+$router->get('/authenticator/verify_code', 'AuthenticatorController@verifyCode');
+$router->get('/authenticator/request_key', 'AuthenticatorController@requestKey');

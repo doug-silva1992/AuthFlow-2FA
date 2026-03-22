@@ -14,184 +14,91 @@
                 }
             ]
         },
-        "/microsoft_authenticator/register_user": {
-            "get": {
+        "/users/register": {
+            "post": {
                 "tags": [
-                    "Microsoft Authenticator"
+                    "Cadastrar Usuários"
                 ],
-                "parameters": [
-                    {
-                        "name": "client_name",
-                        "in": "query",
-                        "description": "Nome do Cliente",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "Email do usuário para o qual a versão está sendo cadastrada",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "senha",
-                        "in": "query",
-                        "description": "Senha do usuário para o qual a versão está sendo cadastrada",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fk_IdentityProvider",
-                        "in": "query",
-                        "description": "ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
+                "summary": "Endpoint para cadastrar usuários",
+                "operationId": "abfca6891307128ecfb5ba14c8f4c4c6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "client_name": {
+                                        "description": "Nome do Cliente",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Email do usuário para o qual o cadastro está sendo realizado",
+                                        "type": "string"
+                                    },
+                                    "senha": {
+                                        "description": "Senha do usuário para o qual o cadastro está sendo realizado",
+                                        "type": "string"
+                                    },
+                                    "fk_IdentityProvider": {
+                                        "description": "ID do provedor de identidade para o qual o cadastro está sendo realizado (opcional, se não for fornecido, será usado um valor padrão)",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
-                "summary": "Versao da aplicacao",
-                "operationId": "816bea21ab3bf869c6afafdc3abeb1f3",
+                },
                 "responses": {
                     "200": {
-                        "description": "Versao retornada com sucesso"
+                        "description": "Cadastro realizado com sucesso"
                     }
                 }
             }
         },
-        "/microsoft_authenticator/request_key": {
+        "/authenticator/request_key": {
             "get": {
                 "tags": [
-                    "Microsoft Authenticator"
+                    "Authenticator"
                 ],
-                "summary": "Versao da aplicacao",
-                "operationId": "1ef5ba65c1a5ed94a17a7f13cf68b1e3",
-                "responses": {
-                    "200": {
-                        "description": "Versao retornada com sucesso"
-                    }
-                }
-            }
-        },
-        "/microsoft_authenticator/verify_code": {
-            "get": {
-                "tags": [
-                    "Microsoft Authenticator"
-                ],
-                "parameters": [
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "description": "Código TOTP a ser verificado",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "summary": "Verifica o código TOTP",
-                "operationId": "verifyMicrosoftAuthenticatorCode",
-                "responses": {
-                    "200": {
-                        "description": "Código verificado com sucesso"
-                    },
-                    "400": {
-                        "description": "Código inválido ou usuário não registrado"
-                    }
-                }
-            }
-        },
-        "/google_authenticator/register_user": {
-            "get": {
-                "tags": [
-                    "Google Authenticator"
-                ],
+                "summary": "Endpoint para solicitar a chave do Microsoft Authenticator ou do Google Authenticator",
+                "operationId": "afa5ff2df491a8bd28b6ad4a28de1134",
                 "parameters": [
                     {
                         "name": "user_id",
                         "in": "query",
-                        "description": "ID do usuário para o qual a versão está sendo solicitada",
+                        "description": "ID do usuário para o qual a chave do autenticador está sendo solicitada",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "client_name",
-                        "in": "query",
-                        "description": "Nome do Cliente",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "senha",
-                        "in": "query",
-                        "description": "Senha do usuário para o qual a versão está sendo solicitada",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fk_IdentityProvider",
-                        "in": "query",
-                        "description": "ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
-                "summary": "Versao da aplicacao",
-                "operationId": "5b6b5edc81a91e598e3d2baab5b26efc",
                 "responses": {
                     "200": {
-                        "description": "Versao retornada com sucesso"
+                        "description": "Chave do autenticador retornada com sucesso"
                     }
                 }
             }
         },
-        "/google_authenticator/request_key": {
+        "/authenticator/verify_code": {
             "get": {
                 "tags": [
-                    "Google Authenticator"
+                    "Authenticator"
                 ],
-                "summary": "Versao da aplicacao",
-                "operationId": "231f0d15162d6576d50fafd5672524f0",
-                "responses": {
-                    "200": {
-                        "description": "Versao retornada com sucesso"
-                    }
-                }
-            }
-        },
-        "/google_authenticator/verify_code": {
-            "get": {
-                "tags": [
-                    "Google Authenticator"
-                ],
+                "summary": "Endpoint para verificar o código de autenticação fornecido pelo usuário",
+                "operationId": "66b8111462449f83a611262822f6aef0",
                 "parameters": [
                     {
                         "name": "code",
                         "in": "query",
-                        "description": "Código TOTP a ser verificado",
+                        "description": "Valida o código de autenticação fornecido pelo usuário",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     }
                 ],
-                "summary": "Verifica o código",
-                "operationId": "verifyGoogleAuthenticatorCode",
                 "responses": {
                     "200": {
                         "description": "Código verificado com sucesso"
@@ -205,12 +112,12 @@
     },
     "tags": [
         {
-            "name": "Microsoft Authenticator",
-            "description": "Microsoft Authenticator"
+            "name": "Cadastrar Usuários",
+            "description": "Cadastrar Usuários"
         },
         {
-            "name": "Google Authenticator",
-            "description": "Google Authenticator"
+            "name": "Authenticator",
+            "description": "Autenticadores de dois fatores (2FA) como Microsoft Authenticator e Google Authenticator"
         }
     ]
 }

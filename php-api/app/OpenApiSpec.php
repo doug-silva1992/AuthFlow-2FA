@@ -18,75 +18,58 @@ use OpenApi\Attributes as OA;
 #[OA\PathItem(path: '/')]
 final class OpenApiSpec
 {
-    #[OA\Get( 
-        path: '/microsoft_authenticator/register_user',
-        summary: 'Endpoint Microsoft Authenticator',
-        tags: ['Microsoft Authenticator'],
-        parameters: [
-            new OA\Parameter(
-                name: 'client_name',
-                in: 'query',
-                description: 'Nome do Cliente',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            ),
-            new OA\Parameter(
-                name: 'email',
-                in: 'query',
-                description: 'Email do usuário para o qual a versão está sendo solicitada',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            ),
-            new OA\Parameter(
-                name: 'senha',
-                in: 'query',
-                description: 'Senha do usuário para o qual a versão está sendo solicitada',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            ),
-            new OA\Parameter(
-                name: 'fk_IdentityProvider',
-                in: 'query',
-                description: 'ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)',
-                required: false,
-                schema: new OA\Schema(type: 'string')
+    #[OA\Post(
+        path: '/users/register',
+        summary: 'Endpoint para cadastrar usuários',
+        tags: ['Cadastrar Usuários'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                type: 'object',
+                properties: [
+                    new OA\Property(
+                        property: 'client_name',
+                        type: 'string',
+                        description: 'Nome do Cliente'
+                    ),
+                    new OA\Property(
+                        property: 'email',
+                        type: 'string',
+                        description: 'Email do usuário para o qual o cadastro está sendo realizado'
+                    ),
+                    new OA\Property(
+                        property: 'senha',
+                        type: 'string',
+                        description: 'Senha do usuário para o qual o cadastro está sendo realizado'
+                    ),
+                    new OA\Property(
+                        property: 'fk_IdentityProvider',
+                        type: 'string',
+                        description: 'ID do provedor de identidade para o qual o cadastro está sendo realizado (opcional, se não for fornecido, será usado um valor padrão)'
+                    )
+                ]
             )
-        ],
+        ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Versao retornada com sucesso'
+                description: 'Cadastro realizado com sucesso'
             )
         ]
     )]
-    public function microsoftAuthenticatorRegisterUser(): void
+    public function registerUser(): void
     {
     }
 
     #[OA\Get(
-        path: '/microsoft_authenticator/request_key',
-        summary: 'Endpoint Microsoft Authenticator',
-        tags: ['Microsoft Authenticator'],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Versao retornada com sucesso'
-            )
-        ]
-    )]
-    public function microsoftAuthenticatorRequestKey(): void
-    {
-    }
-
-    #[OA\Get(
-        path: '/microsoft_authenticator/verify_code',
-        summary: 'Endpoint Microsoft Authenticator',
-        tags: ['Microsoft Authenticator'],
+        path: '/authenticator/request_key',
+        summary: 'Endpoint para solicitar a chave do autenticador',
+        tags: ['Authenticator'],
         parameters: [
             new OA\Parameter(
-                name: 'code',
+                name: 'user_id',
                 in: 'query',
-                description: 'Código TOTP a ser verificado',
+                description: 'ID do usuário para o qual a chave do autenticador está sendo solicitada',
                 required: true,
                 schema: new OA\Schema(type: 'string')
             )
@@ -94,82 +77,18 @@ final class OpenApiSpec
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Código verificado com sucesso'
-            ),
-            new OA\Response(
-                response: 400,
-                description: 'Código inválido ou usuário não registrado'
+                description: 'Chave do autenticador retornada com sucesso'
             )
         ]
     )]
-    public function microsoftAuthenticatorVerifyCode(): void
+    public function authenticatorRequestKey(): void
     {
     }
 
     #[OA\Get(
-        path: '/google_authenticator/register_user',
-        summary: 'Endpoint Google Authenticator',
-        tags: ['Google Authenticator'],
-        parameters: [
-            new OA\Parameter(
-                name: 'client_name',
-                in: 'query',
-                description: 'Nome do Cliente',
-                required: false,
-                schema: new OA\Schema(type: 'string')
-            ),
-            new OA\Parameter(
-                name: 'email',
-                in: 'query',
-                description: 'Email do usuário para o qual a versão está sendo solicitada',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            ),
-            new OA\Parameter(
-                name: 'senha',
-                in: 'query',
-                description: 'Senha do usuário para o qual a versão está sendo solicitada',
-                required: true,
-                schema: new OA\Schema(type: 'string')
-            ),
-             new OA\Parameter(
-                name: 'fk_IdentityProvider',
-                in: 'query',
-                description: 'ID do provedor de identidade para o qual a versão está sendo cadastrada (opcional, se não for fornecido, será usado um valor padrão)',
-                required: false,
-                schema: new OA\Schema(type: 'string')
-            )
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Versao retornada com sucesso'
-            )
-        ]
-    )]
-    public function googleAuthenticatorRegisterUser(): void
-    {
-    }
-
-    #[OA\Get(
-        path: '/google_authenticator/request_key',
-        summary: 'Endpoint Google Authenticator',
-        tags: ['Google Authenticator'],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Versao retornada com sucesso'
-            )
-        ]
-    )]
-    public function googleAuthenticatorRequestKey(): void
-    {
-    }
-
-    #[OA\Get(
-        path: '/google_authenticator/verify_code',
-        summary: 'Endpoint Google Authenticator',
-        tags: ['Google Authenticator'],
+        path: '/authenticator/verify_code',
+        summary: 'Endpoint para verificar o código do autenticador',
+        tags: ['Authenticator'],
         parameters: [
             new OA\Parameter(
                 name: 'code',
@@ -190,7 +109,7 @@ final class OpenApiSpec
             )
         ]
     )]
-    public function googleAuthenticatorVerifyCode(): void
+    public function authenticatorVerifyCode(): void
     {
     }
 }
