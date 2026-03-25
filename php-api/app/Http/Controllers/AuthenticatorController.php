@@ -39,9 +39,9 @@ class AuthenticatorController extends Controller
     {
         $user = new usuariosModel();
         $userId = $request->query('user_id');
+        $clientName = $request->query('client_name');
 
-        var_dump($userId);
-        die;
+        var_dump($userId, $clientName);
 
         if (!$user || !$clientName) {
             return response()->json([

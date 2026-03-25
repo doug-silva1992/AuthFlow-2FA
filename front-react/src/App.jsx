@@ -1,18 +1,14 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import SignUp from "./pages/SignUp"
-import SignIn from "./pages/SignIn"
-import QRCodeSignup from "./pages/QRCodeSignup"
+import { useState } from "react";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import QRCode from "./pages/QRCode";
+import Success from "./pages/Success";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/qr-code-signup" element={<QRCodeSignup />} />
-      </Routes>
-    </BrowserRouter>
-  )
+export default function App() {
+  const [page, setPage] = useState("register");
+
+  const pages = { register: Register, login: Login, qrcode: QRCode, success: Success };
+  const Page = pages[page] || Register;
+
+  return <Page onNavigate={setPage} />;
 }
-
-export default App
