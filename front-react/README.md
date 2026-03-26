@@ -1,16 +1,92 @@
-# React + Vite
+# AuthFlow 2FA - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React + Vite para o sistema de autenticação com dois fatores (2FA) via TOTP.
 
-Currently, two official plugins are available:
+## Setup & Desenvolvimento
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Instalar dependências
 
-## React Compiler
+```bash
+npm install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Rodar em desenvolvimento
 
-## Expanding the ESLint configuration
+```bash
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+A aplicação estará disponível em `http://localhost:5173`.
+
+> **Nota:** O backend (API Laravel Lumen) precisa estar rodando em `http://localhost:8080` para as chamadas de API funcionarem.
+
+### Build para produção
+
+```bash
+npm run build
+```
+
+### Lint
+
+```bash
+npm lint
+```
+
+---
+
+## Arquitetura
+
+### Proxy Vite
+
+O arquivo `vite.config.js` configura um proxy que redireciona todas as requisições `/api/*` para o backend:
+
+```javascript
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8080',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, ''),
+    },
+  },
+}
+```
+
+### Serviço de API (`src/services/api.js`)
+
+Centraliza todas as chamadas HTTP para a API:
+
+```javascript
+import { registerUser, requestAuthenticatorKey, verifyCode } from '@/services/api';
+
+// Registrar novo usuário
+const response = await registerUser({
+  client_name: 'João Silva',
+  email: 'joao@exemplo.com',
+  senha: 'senha123',
+  fk_IdentityProvider: 1
+});
+
+// Gerar chave TOTP e QR Code
+const { uri, secret } = await requestAuthenticatorKey(1);
+
+// Verificar código TOTP
+await verifyCode({ user_id: 1, code: '123456' });
+```
+
+**Tratamento de erros:** Todas as funções lançam exceções com mensagens de erro do backend.
+
+### Páginas
+
+- **Register.jsx** — Formulário de cadastro → chama `registerUser()`
+- **Login.jsx** — Formulário de login (em desenvolvimento)
+- **QRCode.jsx** — Exibe QR Code TOTP → chama `requestAuthenticatorKey()`
+- **Success.jsx** — Confirmação de sucesso
+
+### Stack
+
+- React 19
+- Vite 6
+- Material UI (MUI) v7
+- Emotion (CSS-in-JS)
+- React Router DOM 7

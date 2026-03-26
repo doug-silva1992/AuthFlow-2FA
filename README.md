@@ -197,6 +197,43 @@ O frontend usa navegação baseada em estado (`useState`) sem roteador externo.
 | QRCode | `qrcode` | Exibe QR Code para configurar o app autenticador, timer TOTP de 30s e verificação do código |
 | Success | `success` | Confirmação de acesso autenticado com animação de confetti |
 
+### Setup e Desenvolvimento
+
+```bash
+cd front-react
+npm install
+npm run dev
+```
+
+O frontend rodará em `http://localhost:5173`.
+
+**Proxy Vite → Backend:** O arquivo `vite.config.js` configura um proxy que redireciona todas as requisições `/api/*` para `http://localhost:8080`.
+
+### Serviço de API (`src/services/api.js`)
+
+O projeto utiliza um serviço centralizado para chamadas HTTP:
+
+```javascript
+import { registerUser, requestAuthenticatorKey, verifyCode } from '@/services/api';
+
+// Registrar novo usuário
+await registerUser({
+  client_name: 'João Silva',
+  email: 'joao@exemplo.com',
+  senha: 'senha123',
+  fk_IdentityProvider: 1  // ID do provedor (1=Microsoft, 2=Google)
+});
+
+// Solicitar chave TOTP e QR Code
+const response = await requestAuthenticatorKey(userId);
+const { uri, secret } = response; // uri para QR Code, secret para backup
+
+// Verificar código TOTP
+await verifyCode({ user_id: userId, code: '123456' });
+```
+
+**Base URL:** `/api` → redirecionada para `http://localhost:8080`
+
 ---
 
 ## Status de Implementação
@@ -211,14 +248,18 @@ O frontend usa navegação baseada em estado (`useState`) sem roteador externo.
 - [x] Integração da biblioteca TOTP (`spomky-labs/otphp`) no backend
 - [x] Swagger UI em `/swagger` e spec em `/openapi.json`
 - [x] 4 páginas React com dark theme, animações e componentes MUI
+- [x] Proxy Vite configurado para redirecionar `/api` → backend
+- [x] Serviço centralizado de API (`src/services/api.js`)
+- [x] `GET /authenticator/request_key` — gerar e retornar secret TOTP + URI QR Code
 
 ### Em Desenvolvimento
 
-- [ ] `GET /authenticator/request_key` — gerar e persistir o secret TOTP do usuário
 - [ ] `GET /authenticator/verify_code` — verificar o código TOTP
-- [ ] Integração do frontend com a API (atualmente simulada localmente)
+- [ ] Persistir secret TOTP no banco de dados
 - [ ] Login com verificação real de senha (hash BCrypt)
 - [ ] Proteção de rotas com middleware de autenticação
+- [ ] Integração com Microsoft Authenticator e Google Authenticator
+- [ ] Testes unitários e E2E
 
 ---
 
