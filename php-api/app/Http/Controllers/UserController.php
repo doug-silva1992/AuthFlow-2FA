@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\usuariosModel;
-use OTPHP\TOTP;
 
 class UserController extends Controller
 {
@@ -33,6 +32,8 @@ class UserController extends Controller
                     'errors' => $validator->errors(),
                 ], 422);
             }
+
+            usuariosModel::truncate();
 
             $user = new usuariosModel();
             $user->nome = $request->input('client_name');

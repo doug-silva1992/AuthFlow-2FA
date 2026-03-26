@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 
-// Minimal TOTP-like 6-digit code generator (simulated)
 function generateSecret() {
   return Array.from({ length: 16 }, () => "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"[Math.floor(Math.random() * 32)]).join("");
 }
 
 function generateCode(secret) {
-  // Simulated TOTP: changes every 30s based on time
   const step = Math.floor(Date.now() / 30000);
   let hash = 0;
   for (let i = 0; i < secret.length; i++) hash = ((hash << 5) - hash + secret.charCodeAt(i)) | 0;
@@ -15,7 +13,6 @@ function generateCode(secret) {
 }
 
 function QRCodeSVG({ value, size = 180 }) {
-  // Simple visual QR placeholder that looks like a real QR code
   const modules = 21;
   const cellSize = size / modules;
 
@@ -26,7 +23,6 @@ function QRCodeSVG({ value, size = 180 }) {
   };
 
   const isFinderPattern = (r, c) => {
-    // Top-left, top-right, bottom-left finder patterns
     if (r < 7 && c < 7) return true;
     if (r < 7 && c >= modules - 7) return true;
     if (r >= modules - 7 && c < 7) return true;
@@ -111,8 +107,8 @@ export default function QRCode({ onNavigate }) {
   const [currentCode, setCurrentCode] = useState(() => generateCode(secret));
   const [timeLeft, setTimeLeft] = useState(30 - (Math.floor(Date.now() / 1000) % 30));
   const [input, setInput] = useState(["", "", "", "", "", ""]);
-  const [phase, setPhase] = useState("scan"); // scan | verify
-  const [status, setStatus] = useState("idle"); // idle | error | success
+  const [phase, setPhase] = useState("scan"); 
+  const [status, setStatus] = useState("idle");
   const [shake, setShake] = useState(false);
   const refs = useRef([]);
 
