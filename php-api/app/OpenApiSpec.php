@@ -86,6 +86,25 @@ final class OpenApiSpec
     }
 
     #[OA\Get(
+        path: '/identity_provider',
+        summary: 'Endpoint para obter os provedores de identidade disponíveis',
+        tags: ['Identity Provider'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Provedores de identidade retornados com sucesso'
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Erro ao obter os provedores de identidade'
+            )
+        ]
+    )]
+    public function getIdentityProviders(): void
+    {
+    }
+
+    #[OA\Get(
         path: '/authenticator/verify_code',
         summary: 'Endpoint para verificar o código do autenticador',
         tags: ['Authenticator'],
@@ -112,4 +131,6 @@ final class OpenApiSpec
     public function authenticatorVerifyCode(): void
     {
     }
+
+    
 }

@@ -1,29 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { identity_provider, registerUser } from "../services/api";
 
 export default function Register({ onNavigate }) {
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    authenticator_type: "",
+    password: "",
+    confirm: "",
+  });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const validate = () => {
     const e = {};
     if (!form.name.trim()) e.name = "Nome obrigatório";
     if (!form.email.includes("@")) e.email = "E-mail inválido";
+    if (!form.authenticator_type) e.authenticator_type = "Selecione um autenticador";
     if (form.password.length < 8) e.password = "Mínimo 8 caracteres";
     if (form.password !== form.confirm) e.confirm = "Senhas não coincidem";
     return e;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError("");
     const errs = validate();
     if (Object.keys(errs).length) return setErrors(errs);
     setLoading(true);
-    setTimeout(() => {
-      localStorage.setItem("auth_user", JSON.stringify({ name: form.name, email: form.email }));
+
+    try {
+      const data = await registerUser({
+        client_name: form.name,
+        email: form.email,
+        senha: form.password,
+        fk_IdentityProvider: Number(form.authenticator_type),
+      });
+
+      localStorage.setItem("auth_user", JSON.stringify({
+        user_id: data?.user_id,
+        name: form.name,
+        email: form.email,
+        authenticator_type: form.authenticator_type,
+      }));
+
       setLoading(false);
       onNavigate("qrcode");
-    }, 1200);
+    } catch (error) {
+      setLoading(false);
+      setSubmitError(error?.message || "Falha ao salvar cadastro");
+    }
   };
 
   const Field = ({ id, label, type = "text", placeholder }) => (
@@ -37,6 +64,29 @@ export default function Register({ onNavigate }) {
         onChange={(ev) => { setForm({ ...form, [id]: ev.target.value }); setErrors({ ...errors, [id]: "" }); }}
         className={errors[id] ? "error" : ""}
       />
+      {errors[id] && <span className="err-msg">{errors[id]}</span>}
+    </div>
+  );
+
+  useEffect(() => {
+    identity_provider().then(setIdentityProviders).catch(console.error);
+  }, []);
+
+  const [identityProviders, setIdentityProviders] = useState([]);
+  const SelectField = ({ id, label, options, placeholder }) => (
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
+      <select
+        id={id}
+        value={form[id]}
+        onChange={(ev) => { setForm({ ...form, [id]: ev.target.value }); setErrors({ ...errors, [id]: "" }); }}
+        className={errors[id] ? "error" : ""}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>{option.label}</option>
+        ))}
+      </select>
       {errors[id] && <span className="err-msg">{errors[id]}</span>}
     </div>
   );
@@ -134,7 +184,7 @@ export default function Register({ onNavigate }) {
         form { display: flex; flex-direction: column; gap: 18px; }
         .field { display: flex; flex-direction: column; gap: 7px; }
         label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-        input {
+        input, select {
           background: var(--bg);
           border: 1px solid var(--border);
           border-radius: 3px;
@@ -144,11 +194,22 @@ export default function Register({ onNavigate }) {
           color: var(--text);
           outline: none;
           transition: border-color 0.2s;
+          width: 100%;
         }
+        select { cursor: pointer; }
+        select option { background: var(--surface); color: var(--text); }
         input::placeholder { color: var(--muted); }
-        input:focus { border-color: var(--accent); }
-        input.error { border-color: var(--danger); }
+        input:focus, select:focus { border-color: var(--accent); }
+        input.error, select.error { border-color: var(--danger); }
         .err-msg { font-size: 11px; color: var(--danger); }
+        .error-box {
+          background: rgba(255,77,109,0.1);
+          border: 1px solid rgba(255,77,109,0.3);
+          border-radius: 3px;
+          padding: 10px 14px;
+          font-size: 12px;
+          color: #ff4d6d;
+        }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         button {
           margin-top: 8px;
@@ -192,8 +253,21 @@ export default function Register({ onNavigate }) {
         <p className="subtitle">Configure o 2FA após o cadastro para maior segurança.</p>
 
         <form onSubmit={handleSubmit}>
+          {submitError && <div className="error-box">{submitError}</div>}
+
           <Field id="name" label="Nome completo" placeholder="Seu nome" />
           <Field id="email" label="E-mail" type="email" placeholder="voce@email.com" />
+
+          <SelectField
+            id="authenticator_type"
+            label="Tipo de autenticador"
+            placeholder="Selecione um autenticador"
+            options={identityProviders.map((provider) => ({
+              value: provider.id,
+              label: provider.provider_name,
+            }))}
+          />
+
           <div className="row">
             <Field id="password" label="Senha" type="password" placeholder="••••••••" />
             <Field id="confirm" label="Confirmar" type="password" placeholder="••••••••" />

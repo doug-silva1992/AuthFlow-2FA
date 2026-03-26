@@ -2,6 +2,7 @@
     use App\Http\Controllers\MicrosoftAuthenticatorController;
     use App\Http\Controllers\GoogleAuthenticatorController;
     use App\Http\Controllers\UserController;
+    use App\Http\Controllers\GetProviderAuthenticate;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -99,3 +100,4 @@ HTML
 $router->post('/users/register', 'UserController@registerUser');
 $router->get('/authenticator/verify_code', 'AuthenticatorController@verifyCode');
 $router->get('/authenticator/request_key', 'AuthenticatorController@requestKey');
+$router->get('/identity_provider', 'GetProviderAuthenticate@getProviderAuthenticate');

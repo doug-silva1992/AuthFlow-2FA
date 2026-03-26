@@ -12,6 +12,7 @@ class IdentityProviderModel extends Model
     protected $table = 'IdentityProvider';
 
     protected $fillable = [
+        'id',
         'provider_name'
     ];
 }

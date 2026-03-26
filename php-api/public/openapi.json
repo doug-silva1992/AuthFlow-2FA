@@ -108,6 +108,21 @@
                     }
                 }
             }
+        },
+        "/identity_provider": {
+            "get": {
+                "tags": [
+                    "Identity Provider"
+                ],
+                "summary": "Endpoint para obter os provedores de identidade disponíveis",
+                "operationId": "getIdentityProviders",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Provedores de identidade retornados com sucesso"
+                    }
+                }
+            }
         }
     },
     "tags": [
@@ -118,6 +133,10 @@
         {
             "name": "Authenticator",
             "description": "Autenticadores de dois fatores (2FA) como Microsoft Authenticator e Google Authenticator"
+        },
+        {
+            "name": "Identity Provider",
+            "description": "Provedores de identidade (Identity Providers) para autenticação"
         }
     ]
 }

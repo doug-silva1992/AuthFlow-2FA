@@ -27,3 +27,8 @@ export async function verifyCode({ user_id, code }) {
   const res = await fetch(`${BASE}/authenticator/verify_code?user_id=${user_id}&code=${code}`);
   return handleResponse(res);
 }
+
+export async function identity_provider() {
+  const res = await fetch(`${BASE}/identity_provider`);
+  return handleResponse(res);
+}

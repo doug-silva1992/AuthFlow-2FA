@@ -21,8 +21,8 @@ O fluxo de autenticação consiste em três etapas:
 | Backend | PHP 8.2, Laravel Lumen 10 |
 | 2FA TOTP | `spomky-labs/otphp` ^11.4 |
 | Documentação API | `zircote/swagger-php` ^4.10 |
-| Frontend | React 19 + Vite 6 |
-| UI | Material UI (MUI) v7 + Emotion |
+| Frontend | React + Vite |
+| UI | Componentes React com CSS customizado |
 | Banco de dados | MySQL 8.0 |
 | Infraestrutura | Docker + Docker Compose |
 | Servidor web | Apache 2 (`php:8.2-apache`) |
@@ -151,7 +151,8 @@ Cadastra um novo usuário.
 {
   "client_name": "João Silva",
   "email": "joao@exemplo.com",
-  "senha": "minhasenha123"
+  "senha": "minhasenha123",
+  "fk_IdentityProvider": 1
 }
 ```
 
@@ -167,6 +168,10 @@ Cadastra um novo usuário.
 - `client_name` — obrigatório
 - `email` — obrigatório, formato válido, único na tabela
 - `senha` — obrigatório, mínimo 8 caracteres
+
+### `GET /identity_provider`
+
+Retorna a lista de provedores de autenticação disponíveis para popular o select do cadastro.
 
 ---
 
@@ -234,6 +239,13 @@ await verifyCode({ user_id: userId, code: '123456' });
 
 **Base URL:** `/api` → redirecionada para `http://localhost:8080`
 
+### Fluxo atual do cadastro no frontend
+
+- A tela de Register busca provedores dinamicamente por `GET /identity_provider`.
+- O campo "Tipo de autenticador" é um select obrigatório.
+- Ao submeter, o frontend chama `POST /users/register`.
+- Em caso de sucesso, o frontend salva dados básicos no localStorage para seguir para a tela de QR Code.
+
 ---
 
 ## Status de Implementação
@@ -251,6 +263,8 @@ await verifyCode({ user_id: userId, code: '123456' });
 - [x] Proxy Vite configurado para redirecionar `/api` → backend
 - [x] Serviço centralizado de API (`src/services/api.js`)
 - [x] `GET /authenticator/request_key` — gerar e retornar secret TOTP + URI QR Code
+- [x] Registro no frontend integrado ao backend (`POST /users/register`)
+- [x] Select de provedor 2FA carregado de `GET /identity_provider`
 
 ### Em Desenvolvimento
 
@@ -260,6 +274,7 @@ await verifyCode({ user_id: userId, code: '123456' });
 - [ ] Proteção de rotas com middleware de autenticação
 - [ ] Integração com Microsoft Authenticator e Google Authenticator
 - [ ] Testes unitários e E2E
+- [ ] Remover truncamento de usuários no endpoint de cadastro para permitir múltiplos registros
 
 ---
 
